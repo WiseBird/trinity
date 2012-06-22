@@ -3,6 +3,7 @@ package trinity
 import (
 	"errors"
 	"net/http"
+	"encoding/json"
 )
 
 // ActionResultInterface generates the http-response using a given mvc infrastructure,
@@ -13,21 +14,21 @@ type ActionResultInterface interface {
 
 // Error action result
 type ErrorActionResult struct {
-	err  error
+	err interface{}
 	view bool // true, if the error occured during the error view generation.
 	// an internal state variable used to avoid infinite loops
 }
 
 // Generates an error result representing a specified error
-func ErrorResult(err error) ActionResultInterface {
+func ErrorResult(err interface{}) ActionResultInterface {
 	logger.Trace("")
-	logger.Debug("err: %s", err.Error())
+	logger.Debug("err: %v", err)
 
 	return &ErrorActionResult{err, false}
 }
-func viewErrorResult(err error) ActionResultInterface {
+func viewErrorResult(err interface{}) ActionResultInterface {
 	logger.Trace("")
-	logger.Debug("err: %s", err.Error())
+	logger.Debug("err: %v", err)
 
 	return &ErrorActionResult{err, true}
 }
@@ -159,4 +160,28 @@ func (result *ShowViewResult) Response(mvcI *MvcInfrastructure, c Controller, a 
 		return
 	}
 	response.Write(html)
+}
+
+// Action result that sends JSON-formatted content to the response.
+type JsonActionResult struct {
+	Data interface{}
+}
+
+// Creates a json action result
+func JsonResult(data interface{}) ActionResultInterface {
+	logger.Trace("")
+
+	return &JsonActionResult{data}
+}
+func (result *JsonActionResult) Response(mvcI *MvcInfrastructure, c Controller, a Action, response http.ResponseWriter, request *http.Request) {
+	logger.Trace("")
+
+	bytes, err := json.Marshal(result.Data)
+	if err != nil {
+		ErrorResult(err).Response(mvcI, c, a, response, request)
+		return
+	}
+
+	response.Header().Set("Content-Type", "application/json")
+	response.Write(bytes)
 }

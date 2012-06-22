@@ -129,21 +129,30 @@ func (mvcI *MvcInfrastructure) wrapHandler(c Controller, a Action) func(response
 }
 
 func (mvcI *MvcInfrastructure) handleRequest(c Controller, a Action, response http.ResponseWriter, request *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			logger.Trace("recovered from panic")
+			ErrorResult(err).Response(mvcI, c, a, response, request)
+		}
+	}()
+	
+	var res ActionResultInterface
+	
 	if mvcI.accessChecker != nil {
 		logger.Trace("check access")
-		cTo, aTo, allowed := mvcI.accessChecker.IsAccessAllowed(c, a, response, request)
-		if !allowed {
-			c = cTo
-			a = aTo
-			logger.Trace("access denied. go to c: %v, a: %v", c, a)
+		res = mvcI.accessChecker.IsAccessAllowed(c, a, response, request)
+		if res != nil {
+			logger.Trace("access denied")
 		}
 	}
 
-	res := mvcI.callAction(c, a, response, request)
 	if res == nil {
-		logger.Trace("Done")
-		return
+		res = mvcI.callAction(c, a, response, request)
+	}
+	
+	if res != nil {
+		res.Response(mvcI, c, a, response, request)
 	}
 
-	res.Response(mvcI, c, a, response, request)
+	logger.Trace("Done")
 }
