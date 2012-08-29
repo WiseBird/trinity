@@ -40,7 +40,7 @@ func (parser *viewFolderParser) parse() error {
 
 	for _, controllerName := range controllerNames {
 		controller := Controller(controllerName)
-		logger.Debug("Controller: %s", controller)
+		logger.Debugf("Controller: %s", controller)
 
 		actionNames, err := parser.getActionNames(controllerName)
 		if err != nil {
@@ -49,10 +49,10 @@ func (parser *viewFolderParser) parse() error {
 
 		for _, actionName := range actionNames {
 			action := Action(actionName)
-			logger.Debug("Action: %s", action)
+			logger.Debugf("Action: %s", action)
 
 			templatePath := filepath.Join(parser.viewsFolder, controllerName, actionName+ViewsSuffix)
-			logger.Debug("TemplatePath: %v", templatePath)
+			logger.Debugf("TemplatePath: %v", templatePath)
 
 			parser.mvcI.bindView(controller, action, templatePath)
 		}
@@ -86,7 +86,7 @@ func (parser *viewFolderParser) getControllerNames() ([]string, error) {
 	}
 
 	for _, folderStat := range folderStats {
-		logger.Debug("check %s", folderStat.Name())
+		logger.Debugf("check %s", folderStat.Name())
 
 		if !folderStat.IsDir() {
 			continue
@@ -114,7 +114,7 @@ func (parser *viewFolderParser) getActionNames(controllerName string) ([]string,
 	}
 
 	for _, fileStat := range fileStats {
-		logger.Debug("check %s", fileStat.Name())
+		logger.Debugf("check %s", fileStat.Name())
 
 		if fileStat.IsDir() {
 			continue

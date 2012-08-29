@@ -133,7 +133,7 @@ func newHandlerInvoker(handler *methodDescriptor) *handlerInvoker {
 // is returned to provide convenient method call chaining.
 func (invoker *handlerInvoker) AddValue(name string, val string) *handlerInvoker {
 	logger.Trace("")
-	logger.Debug("[%s] %s", name, val)
+	logger.Debugf("[%s] %s", name, val)
 
 	_, exists := invoker.values[name]
 	if !exists {
@@ -232,9 +232,9 @@ func (invoker *handlerInvoker) getParamValue(paramTypeRaw reflect.Type) reflect.
 
 	logger.Trace("decode from values")
 	paramValue := getParamNewValue(paramType, isPtr)
-	logger.Debug("%v", paramValue)
+	logger.Debugf("%v", paramValue)
 	decode(paramValue.Interface(), invoker.values)
-	logger.Debug("%v", paramValue)
+	logger.Debugf("%v", paramValue)
 
 	return paramValue
 }

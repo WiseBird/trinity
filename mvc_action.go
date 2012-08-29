@@ -10,7 +10,7 @@ func (mvcI *MvcInfrastructure) bindAction(c Controller, a Action, m method, hand
 	//c = toLowerC(c)
 	//a = toLowerA(a)
 
-	logger.Debug("c: %v, a: %v, m: %v", c, a, m)
+	logger.Debugf("c: %v, a: %v, m: %v", c, a, m)
 
 	mvcI.checkViewOnActionBind(c, a)
 
@@ -31,20 +31,20 @@ func (mvcI *MvcInfrastructure) bindAction(c Controller, a Action, m method, hand
 	methods[m] = handler
 
 	url := createURL(c, a, nil)
-	logger.Debug("URL = %s", url)
+	logger.Debugf("URL = %s", url)
 	mvcI.Router.HandleFunc(url, mvcI.wrapHandler(c, a)).Methods(string(m))
 }
 
 func (mvcI *MvcInfrastructure) checkViewOnActionBind(c Controller, a Action) {
 	actions, exists := mvcI.views[c]
 	if !exists {
-		logger.Warn("Added handler for missing view: controller - %v, action - %v", c, a)
+		logger.Warnf("Added handler for missing view: controller - %v, action - %v", c, a)
 		return
 	}
 
 	_, exists = actions[a]
 	if !exists {
-		logger.Warn("Added handler for missing view: controller - %v, action - %v", c, a)
+		logger.Warnf("Added handler for missing view: controller - %v, action - %v", c, a)
 
 		return
 	}
@@ -54,7 +54,7 @@ func (mvcI *MvcInfrastructure) checkViewOnActionBind(c Controller, a Action) {
 // Gorilla HandleFunc method.
 func (mvcI *MvcInfrastructure) BindUrl(c Controller, a Action, url string) {
 	logger.Trace("")
-	logger.Debug("c: %v, a: %v, url: %v", c, a, url)
+	logger.Debugf("c: %v, a: %v, url: %v", c, a, url)
 
 	mvcI.Router.HandleFunc(url, mvcI.wrapHandler(c, a))
 }
@@ -62,19 +62,19 @@ func (mvcI *MvcInfrastructure) BindUrl(c Controller, a Action, url string) {
 func (mvcI *MvcInfrastructure) checkHandlerOnUrlBind(c Controller, a Action) {
 	actions, exists := mvcI.handlers[c]
 	if !exists {
-		logger.Warn("Added url for missing handler: controller - %v, action - %v", c, a)
+		logger.Warnf("Added url for missing handler: controller - %v, action - %v", c, a)
 		return
 	}
 
 	_, exists = actions[a]
 	if !exists {
-		logger.Warn("Added url for missing handler: controller - %v, action - %v", c, a)
+		logger.Warnf("Added url for missing handler: controller - %v, action - %v", c, a)
 		return
 	}
 }
 
 func (mvcI *MvcInfrastructure) callAction(c Controller, a Action, response http.ResponseWriter, request *http.Request) ActionResultInterface {
-	logger.Trace("c: %v, a: %v", c, a)
+	logger.Tracef("c: %v, a: %v", c, a)
 
 	//c = toLowerC(c)
 	//a = toLowerA(a)
@@ -82,14 +82,14 @@ func (mvcI *MvcInfrastructure) callAction(c Controller, a Action, response http.
 	logger.Trace("Search actions")
 	actions, exists := mvcI.handlers[c]
 	if !exists {
-		logger.Error("controller not found: %v", c)
+		logger.Errorf("controller not found: %v", c)
 		return NotFoundResult()
 	}
 
 	logger.Trace("Search methods")
 	methods, exists := actions[a]
 	if !exists {
-		logger.Error("action not found: %v", a)
+		logger.Errorf("action not found: %v", a)
 		return NotFoundResult()
 	}
 

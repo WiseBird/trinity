@@ -57,7 +57,7 @@ func (template *templateDescriptor) parseOptions(viewsFolder string) error {
 	optionLines := template.extractOptionLines(string(bytes))
 
 	for _, line := range optionLines {
-		logger.Debug("line: %s", line)
+		logger.Debugf("line: %s", line)
 
 		if strings.HasPrefix(line, "{") {
 			break
@@ -77,7 +77,7 @@ func (template *templateDescriptor) parseOptions(viewsFolder string) error {
 			}
 		case AdditionalTemplateOption:
 			{
-				logger.Debug("add template: %s", vals[1])
+				logger.Debugf("add template: %s", vals[1])
 				template.additionalTemplates = append(template.additionalTemplates, filepath.Join(viewsFolder, vals[1]))
 				break
 			}
@@ -93,14 +93,14 @@ func (template *templateDescriptor) extractOptionLines(text string) []string {
 	emptyResult := make([]string, 0)
 
 	indexes := regexpOptionsTepmplate.FindAllStringIndex(text, -1)
-	logger.Debug("indexes: %v", indexes)
+	logger.Debugf("indexes: %v", indexes)
 
 	if len(indexes) == 0 {
 		return emptyResult
 	}
 
 	indexesEnds := regexpEnd.FindAllStringIndex(text, -1)
-	logger.Debug("indexesEnds: %v", indexesEnds)
+	logger.Debugf("indexesEnds: %v", indexesEnds)
 
 	if len(indexes) == 0 {
 		return emptyResult

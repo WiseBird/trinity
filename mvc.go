@@ -73,11 +73,11 @@ func (mvcI *MvcInfrastructure) bindView(c Controller, a Action, templatePath str
 	//c = toLowerC(c)
 	//a = toLowerA(a)
 
-	logger.Debug("c = %v, a = %v", c, a)
+	logger.Debugf("c = %v, a = %v", c, a)
 
 	template, err := newTemplateDescriptor(mvcI.viewsFolder, templatePath)
 	if err != nil {
-		logger.Error("%v", err)
+		logger.Errorf("%v", err)
 		return err
 	}
 
@@ -115,14 +115,14 @@ func defaultNotFound(response http.ResponseWriter, request *http.Request) {
 }
 
 func defaultInternalError(response http.ResponseWriter, request *http.Request, err interface{}) {
-	logger.Debug("%v", err)
+	logger.Debugf("%v", err)
 	response.Write([]byte(fmt.Sprintf("<html><body>Internal Error: %v</body></html>", err)))
 }
 
 // wrapHandler creates and internal func for a specified controller/action pair
 func (mvcI *MvcInfrastructure) wrapHandler(c Controller, a Action) func(response http.ResponseWriter, request *http.Request) {
 	return func(response http.ResponseWriter, request *http.Request) {
-		logger.Debug("c: %v, a: %v, m: %s", c, a, request.Method)
+		logger.Debugf("c: %v, a: %v, m: %s", c, a, request.Method)
 
 		mvcI.handleRequest(c, a, response, request)
 	}

@@ -22,13 +22,13 @@ type ErrorActionResult struct {
 // Generates an error result representing a specified error
 func ErrorResult(err interface{}) ActionResultInterface {
 	logger.Trace("")
-	logger.Debug("err: %v", err)
+	logger.Debugf("err: %v", err)
 
 	return &ErrorActionResult{err, false}
 }
 func viewErrorResult(err interface{}) ActionResultInterface {
 	logger.Trace("")
-	logger.Debug("err: %v", err)
+	logger.Debugf("err: %v", err)
 
 	return &ErrorActionResult{err, true}
 }
@@ -89,7 +89,7 @@ func RedirectToAction(c Controller, a Action, params map[string]string) ActionRe
 	//c = toLowerC(c)
 	//a = toLowerA(a)
 
-	logger.Debug("c: %v, a: %v, p: %v", c, a, params)
+	logger.Debugf("c: %v, a: %v, p: %v", c, a, params)
 
 	return &RedirectToActionResult{c, a, params}
 }
@@ -123,12 +123,12 @@ func ShowView(c Controller, a Action, vm interface{}) ActionResultInterface {
 	//c = toLowerC(c)
 	//a = toLowerA(a)
 
-	logger.Debug("c: %v, a: %v", c, a)
+	logger.Debugf("c: %v, a: %v", c, a)
 
 	return &ShowViewResult{c, a, vm}
 }
 func (result *ShowViewResult) Response(mvcI *MvcInfrastructure, c Controller, a Action, response http.ResponseWriter, request *http.Request) {
-	logger.Trace("View: res.c = %v, res.a = %v, c = %v, a = %v", result.c, result.a, c, a)
+	logger.Tracef("View: res.c = %v, res.a = %v, c = %v, a = %v", result.c, result.a, c, a)
 	if len(result.c) > 0 {
 		c = result.c
 	}
@@ -139,7 +139,7 @@ func (result *ShowViewResult) Response(mvcI *MvcInfrastructure, c Controller, a 
 	logger.Trace("get views")
 	actions, exists := mvcI.views[c]
 	if !exists {
-		logger.Error("Controller not found: %v", c)
+		logger.Errorf("Controller not found: %v", c)
 		viewErrorResult(errors.New("Controller not found")).Response(mvcI, c, a, response, request)
 		return
 	}
@@ -147,7 +147,7 @@ func (result *ShowViewResult) Response(mvcI *MvcInfrastructure, c Controller, a 
 	logger.Trace("get actions")
 	template, exists := actions[a]
 	if !exists {
-		logger.Error("Action not found: %v", a)
+		logger.Errorf("Action not found: %v", a)
 		viewErrorResult(errors.New("Action not found")).Response(mvcI, c, a, response, request)
 		return
 	}
@@ -155,7 +155,7 @@ func (result *ShowViewResult) Response(mvcI *MvcInfrastructure, c Controller, a 
 	logger.Trace("render")
 	html, err := renderPage(result.vm, template)
 	if err != nil {
-		logger.Error("%v", err)
+		logger.Errorf("%v", err)
 		viewErrorResult(err).Response(mvcI, c, a, response, request)
 		return
 	}

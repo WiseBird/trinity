@@ -51,7 +51,7 @@ func (baseController *BaseControllerInfoExtracter) reflectValue() {
 	structType := ptrType.Elem()
 
 	structName := structType.Name()
-	logger.Debug("sN = %s", structName)
+	logger.Debugf("sN = %s", structName)
 
 	if strings.HasSuffix(strings.ToLower(structName), controllerSuffix) {
 		baseController.Controller = C(structName[:len(structName)-len(controllerSuffix)])
@@ -61,7 +61,7 @@ func (baseController *BaseControllerInfoExtracter) reflectValue() {
 
 	for i := 0; i < ptrType.NumMethod(); i++ {
 		m := ptrType.Method(i)
-		logger.Debug("method= %s", m.Name)
+		logger.Debugf("method= %s", m.Name)
 
 		if !baseController.checkMethod(m) {
 			logger.Trace("wrong signature")

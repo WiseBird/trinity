@@ -32,14 +32,14 @@ func A(s string) Action {
 
 // Checks whether controller equals s. Case insensitive
 func (c Controller) EqualsS(s string) bool {
-	logger.Debug("c.EqualsS %v == %s", c, s)
+	logger.Debugf("c.EqualsS %v == %s", c, s)
 
 	return strings.ToLower(s) == strings.ToLower(string(c))
 }
 
 // Checks whether action equals s. Case insensitive
 func (a Action) EqualsS(s string) bool {
-	logger.Debug("a.EqualsS %v == %s", a, s)
+	logger.Debugf("a.EqualsS %v == %s", a, s)
 
 	return strings.ToLower(s) == strings.ToLower(string(a))
 }
@@ -103,11 +103,11 @@ func parseURL(url string) (c Controller, a Action) {
 }
 
 func traceParamValue(paramValue reflect.Value) {
-	logger.Trace("paramValue: Type.Name= %v Kind= %v", paramValue.Type().Name(), paramValue.Kind())
+	logger.Tracef("paramValue: Type.Name= %v Kind= %v", paramValue.Type().Name(), paramValue.Kind())
 }
 
 func traceParamType(paramType reflect.Type) {
-	logger.Trace("paramType: Name= %v Kind= %v", paramType.Name(), paramType.Kind())
+	logger.Tracef("paramType: Name= %v Kind= %v", paramType.Name(), paramType.Kind())
 }
 
 func stripPrefix(prefix string, h http.Handler, nf http.Handler) http.Handler {

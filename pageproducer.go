@@ -11,7 +11,7 @@ import (
 // for inner elements).
 func renderPage(vm interface{}, templateDescr *templateDescriptor) (html []byte, err error) {
 	logger.Trace("")
-	logger.Debug("index: %s, master: %s", templateDescr.templatePath, templateDescr.masterPage)
+	logger.Debugf("index: %s, master: %s", templateDescr.templatePath, templateDescr.masterPage)
 
 	var pageTemplate *template.Template = nil
 	if templateDescr.masterPage != "" {
@@ -38,7 +38,7 @@ func renderPage(vm interface{}, templateDescr *templateDescriptor) (html []byte,
 	}
 	
 	for _, pagePath := range templateDescr.additionalTemplates {
-		logger.Debug("dep: %s", pagePath)
+		logger.Debugf("dep: %s", pagePath)
 
 		_, err = pageTemplate.ParseFiles(pagePath)
 		if err != nil {
