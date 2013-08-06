@@ -4,6 +4,10 @@ import (
 	"net/http"
 )
 
+const (
+	defaultMaxMemory = 32 << 20 // 32 MB
+)
+
 func (mvcI *MvcInfrastructure) bindAction(c Controller, a Action, m method, handler *methodDescriptor) {
 	logger.Trace("")
 
@@ -120,6 +124,12 @@ func (mvcI *MvcInfrastructure) callHandler(handler *methodDescriptor, c Controll
 
 	if request.Method == "POST" {
 		err := request.ParseForm()
+		if err != nil {
+			logger.Error(err.Error())
+			return ErrorResult(err)
+		}
+		
+		err = request.ParseMultipartForm(defaultMaxMemory)
 		if err != nil {
 			logger.Error(err.Error())
 			return ErrorResult(err)

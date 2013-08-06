@@ -1,7 +1,6 @@
 package trinity
 
 import (
-	"accounting"
 	"errors"
 	seelog "github.com/cihub/seelog"
 	"io"
@@ -22,7 +21,6 @@ func DisableLog() {
 // Use this func if you are using seelog logging system in your app.
 func UseLogger(newLogger seelog.LoggerInterface) {
 	logger = newLogger
-	accounting.UseLogger(logger)
 }
 
 // SetLogWriter uses a specified io.Writer to output library log.
